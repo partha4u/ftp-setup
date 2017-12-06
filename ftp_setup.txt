@@ -1,0 +1,28 @@
+If for some reason you just want to use plain FTP, you can do the following to install it. (I highly recommend you stick to SFTP as it much more secure, especially if you plan on allowing internet access).
+1. Using SSH or the terminal on the Pi enter the following commands.
+sudo apt-get update
+sudo apt-get install vsftpd
+
+2. Now open up the config file by entering the following command:
+sudo nano /etc/vsftpd.conf
+
+3. In here add or uncomment(Remove the #) for the following settings.
+anonymous_enable=NO
+local_enable=YES
+write_enable=YES
+local_umask=022
+chroot_local_user=YES
+user_sub_token=$USER
+local_root=/home/$USER/ftp
+
+4. Once you are done press ctrl+x and then y to save and exit.
+ 
+5. Now we need to create the FTP directory so we can transfer files. The root directory is not allowed to have write permissions so we will need a sub folder called files. If you try to copy to FTP it won’t work but FTP/files will. Replace <user> with the relevant user, for example
+mkdir /home/<user>/FTP
+mkdir /home/<user>/FTP/files
+chmod a-w /home/<user>/ftp
+
+6. Now restart the service by entering the following command:
+sudo service vsftpd restart
+
+7. You should now be able to connect over plain FTP (Port 21).
